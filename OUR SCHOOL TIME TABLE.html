@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AP MODEL SCHOOL SEETHARAMAPURAM TIME TABLE</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #2c3e50, #4a6491);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 5px solid #3498db;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .tabs {
+            display: flex;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            padding: 0 20px;
+        }
+        
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .controls {
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .selector-group {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #2980b9;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+        }
+        
+        .info-panel {
+            flex: 2;
+            min-width: 300px;
+            background-color: #e8f4fc;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .info-panel h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .results-container {
+            padding: 20px;
+            min-height: 400px;
+        }
+        
+        .results-header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        .results-header h2 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+        }
+        
+        .teacher-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .teacher-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #3498db;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .teacher-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .teacher-name {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .teacher-subject {
+            font-size: 1.1rem;
+            color: #e74c3c;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .teacher-details {
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-style: italic;
+            grid-column: 1 / -1;
+        }
+        
+        .no-results h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        th {
+            background: linear-gradient(to right, #2c3e50, #4a6491);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+            transition: background-color 0.3s;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        tr:hover {
+            background-color: #e8f4fc;
+        }
+        
+        .day-header {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .period-time {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #2c3e50;
+            color: white;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+            
+            .selector-group, .info-panel {
+                width: 100%;
+            }
+            
+            .teacher-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+                padding: 10px 5px;
+            }
+        }
+        
+        .highlight {
+            background-color: #fff9c4 !important;
+            border: 2px solid #ffd54f;
+        }
+        
+        .section-title {
+            margin: 30px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+            color: #2c3e50;
+        }
+        
+        .note {
+            background-color: #fff9c4;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 5px solid #ffd54f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AP MODEL SCHOOL SEETHARAMAPURAM TIME TABLE</h1>
+            <p class="subtitle">Teacher Finder, MDM Duties & Vidya Shakthi</p>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="teacher-finder">Teacher Finder</div>
+            <div class="tab" data-tab="mdm-duties">MDM Duties</div>
+            <div class="tab" data-tab="vidya-shakthi">Vidya Shakthi</div>
+        </div>
+        
+        <!-- Teacher Finder Tab -->
+        <div id="teacher-finder" class="tab-content active">
+            <div class="controls">
+                <div class="selector-group">
+                    <label for="classSelect">Select Class:</label>
+                    <select id="classSelect">
+                        <option value="">-- Choose a Class --</option>
+                        <option value="6">6th Class</option>
+                        <option value="7">7th Class</option>
+                        <option value="8">8th Class</option>
+                        <option value="9">9th Class</option>
+                        <option value="10">10th Class</option>
+                        <option value="jr-mpc">Jr.MPC</option>
+                        <option value="jr-bipc">Jr.Bi.PC</option>
+                        <option value="jr-cec">Jr.CEC</option>
+                        <option value="sr-mpc">Sr.MPC</option>
+                        <option value="sr-bipc">Sr.Bi.PC</option>
+                        <option value="sr-cec">Sr.CEC</option>
+                    </select>
+                </div>
+                
+                <div class="selector-group">
+                    <label for="periodSelect">Select Period:</label>
+                    <select id="periodSelect">
+                        <option value="">-- Choose a Period --</option>
+                        <option value="1">1st Period (09:15 AM to 10:00 AM)</option>
+                        <option value="2">2nd Period (10:00 AM to 10:40 AM)</option>
+                        <option value="3">3rd Period (10:55 AM to 11:35 AM)</option>
+                        <option value="4">4th Period (11:35 AM to 12:15 PM)</option>
+                        <option value="5">5th Period (01:05 PM to 01:50 PM)</option>
+                        <option value="6">6th Period (01:50 PM to 02:30 PM)</option>
+                        <option value="7">7th Period (02:40 PM to 03:20 PM)</option>
+                        <option value="8">8th Period (03:20 PM to 04:00 PM)</option>
+                    </select>
+                </div>
+                
+                <div class="info-panel">
+                    <h3>📋 How to Use</h3>
+                    <p>Select a class and period from the dropdowns to see which teachers are teaching that class during the selected period.</p>
+                </div>
+            </div>
+            
+            <div class="results-container">
+                <div id="resultsContent">
+                    <div class="no-results">
+                        <h3>Please select a class and period</h3>
+                        <p>The teacher information will appear here once you make your selections.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- MDM Duties Tab -->
+        <div id="mdm-duties" class="tab-content">
+            <div class="results-container">
+                <h2 class="section-title">MDM Duties</h2>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Day</th>
+                                <th>Teacher 1</th>
+                                <th>Teacher 2</th>
+                                <th>Teacher 3</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="day-header">MONDAY</td>
+                                <td>SRI HARI SIR</td>
+                                <td>SANDHANI SIR</td>
+                                <td>LAVANYA MADAM</td>
+                            </tr>
+                            <tr>
+                                <td class="day-header">TUESDAY</td>
+                                <td>PARAMDHAMAIAH SIR</td>
+                                <td>YERRAIAH SIR</td>
+                                <td>MADHAVI MADAM</td>
+                            </tr>
+                            <tr>
+                                <td class="day-header">WEDNESDAY</td>
+                                <td>SURESH SIR</td>
+                                <td>DORASANAIH SIR</td>
+                                <td>SANDHYA MADAM</td>
+                            </tr>
+                            <tr>
+                                <td class="day-header">THURSDAY</td>
+                                <td>CHANDRAIAH SIR</td>
+                                <td>FAREEDH SIR</td>
+                                <td>PARVATHI MADAM</td>
+                            </tr>
+                            <tr>
+                                <td class="day-header">FRIDAY</td>
+                                <td>BAJI SIR</td>
+                                <td>SAI NATH SIR</td>
+                                <td>BHAVANA MADAM</td>
+                            </tr>
+                            <tr>
+                                <td class="day-header">SATURDAY</td>
+                                <td>BRAHMANADAM SIR</td>
+                                <td>SREELAKSHMI MADAM</td>
+                                <td>SHANTHI MADAM</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="note">
+                    <strong>Note:</strong> Lakshmi Garu is Alternate to any on Leave
+                </div>
+            </div>
+        </div>
+        
+        <!-- Vidya Shakthi Tab -->
+        <div id="vidya-shakthi" class="tab-content">
+            <div class="results-container">
+                <h2 class="section-title">Vidya Shakthi Timetable</h2>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Day</th>
+                                <th>6th Class</th>
+                                <th>7th Class</th>
+                                <th>8th Class</th>
+                                <th>9th Class</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="day-header">MONDAY</td>
+                                <td>MATHS-BAJI SIR</td>
+                                <td>ENGLISH-CHANDRAIAH SIR</td>
+                                <td>SURESH SIR</td>
+                                <td>SURESH SIR</td>
+                            </tr>
+                            <tr>
+                                <td class="day-header">TUESDAY</td>
+                                <td>ENGLISH-CHANDRAIAH SIR</td>
+                                <td>SCIENCE-BHAVANA MADAM</td>
+                                <td>BRAHMANADAM SIR</td>
+                                <td>BRAHMANADAM SIR</td>
+                            </tr>
+                            <tr>
+                                <td class="day-header">WEDNESDAY</td>
+                                <td>SCIENCE-BHAVANA MADAM</td>
+                                <td>MATHS-BAJI SIR</td>
+                                <td>PARAMDHAMAIAH SIR</td>
+                                <td>PARAMDHAMAIAH SIR</td>
+                            </tr>
+                            <tr>
+                                <td class="day-header">THURSDAY</td>
+                                <td>BRAHMANADAM SIR</td>
+                                <td>BRAHMANADAM SIR</td>
+                                <td>ENGLISH-CHANDRAIAH SIR</td>
+                                <td>MATHS-PARVATHI MADAM</td>
+                            </tr>
+                            <tr>
+                                <td class="day-header">FRIDAY</td>
+                                <td>SURESH SIR</td>
+                                <td>SURESH SIR</td>
+                                <td>SCIENCE-BHAVANA MADAM</td>
+                                <td>ENGLISH-CHANDRAIAH SIR</td>
+                            </tr>
+                            <tr>
+                                <td class="day-header">SATURDAY</td>
+                                <td>PARAMDHAMAIAH SIR</td>
+                                <td>PARAMDHAMAIAH SIR</td>
+                                <td>MATHS-PARVATHI MADAM</td>
+                                <td>SCIENCE-SRI HARI SIR/SRI LAKSHMI MADAM</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>School Timetable Management System &copy; 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab');
+            const classSelect = document.getElementById('classSelect');
+            const periodSelect = document.getElementById('periodSelect');
+            const resultsContent = document.getElementById('resultsContent');
+            
+            // Tab switching functionality
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked tab and corresponding content
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Complete timetable data structure for all classes
+            const timetableData = {
+                "6": {
+                    className: "6th Class",
+                    classTeacher: "BAJI SIR",
+                    periods: {
+                        "1": {
+                            "Monday": { subject: "MATH", teacher: "BAJI SIR", note: "TUE-PAL LAB" },
+                            "Tuesday": { subject: "MATH", teacher: "BAJI SIR", note: "" },
+                            "Wednesday": { subject: "MATH", teacher: "BAJI SIR", note: "" },
+                            "Thursday": { subject: "MATH", teacher: "BAJI SIR", note: "" },
+                            "Friday": { subject: "MATH", teacher: "BAJI SIR", note: "" },
+                            "Saturday": { subject: "MATH", teacher: "BAJI SIR", note: "" }
+                        },
+                        "2": {
+                            "Monday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "MON-PAL LAB" },
+                            "Tuesday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Wednesday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Thursday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Friday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Saturday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" }
+                        },
+                        "3": {
+                            "Monday": { subject: "SCI", teacher: "BHAVANA MADAM", note: "" },
+                            "Tuesday": { subject: "SCI", teacher: "BHAVANA MADAM", note: "" },
+                            "Wednesday": { subject: "SCI", teacher: "BHAVANA MADAM", note: "" },
+                            "Thursday": { subject: "SCI", teacher: "BHAVANA MADAM", note: "" },
+                            "Friday": { subject: "SCI", teacher: "BHAVANA MADAM", note: "" },
+                            "Saturday": { subject: "SCI", teacher: "BHAVANA MADAM", note: "" }
+                        },
+                        "4": {
+                            "Monday": { subject: "SOC", teacher: "BRAMHANANDAM SIR", note: "" },
+                            "Tuesday": { subject: "SOC", teacher: "BRAMHANANDAM SIR", note: "" },
+                            "Wednesday": { subject: "SOC", teacher: "BRAMHANANDAM SIR", note: "" },
+                            "Thursday": { subject: "SOC", teacher: "BRAMHANANDAM SIR", note: "" },
+                            "Friday": { subject: "SOC", teacher: "BRAMHANANDAM SIR", note: "" },
+                            "Saturday": { subject: "SOC", teacher: "BRAMHANANDAM SIR", note: "" }
+                        },
+                        "5": {
+                            "Monday": { subject: "TEL", teacher: "SURESH SIR", note: "WEDNESDAY-PAL LAB" },
+                            "Tuesday": { subject: "TEL", teacher: "SURESH SIR", note: "" },
+                            "Wednesday": { subject: "TEL", teacher: "SURESH SIR", note: "" },
+                            "Thursday": { subject: "TEL", teacher: "SURESH SIR", note: "" },
+                            "Friday": { subject: "TEL", teacher: "SURESH SIR", note: "" },
+                            "Saturday": { subject: "TEL", teacher: "SURESH SIR", note: "" }
+                        },
+                        "6": {
+                            "Monday": { subject: "Slip Test", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "TELUGU" },
+                            "Tuesday": { subject: "Slip Test", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "ENGLISH" },
+                            "Wednesday": { subject: "Slip Test", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "HINDI" },
+                            "Thursday": { subject: "Cultural Activities", teacher: "MADAVI MADAM", note: "" },
+                            "Friday": { subject: "Slip Test", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "SCIENCE" },
+                            "Saturday": { subject: "Slip Test", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "MATHS" }
+                        },
+                        "7": {
+                            "Monday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Tuesday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Wednesday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Thursday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Friday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Saturday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" }
+                        },
+                        "8": {
+                            "Monday": { subject: "Lib/Yoga/PET", teacher: "PARANDHAMAIAH SIR", note: "PAL LAB - TELUGU" },
+                            "Tuesday": { subject: "Lib/Yoga/PET", teacher: "PARANDHAMAIAH SIR", note: "PAL LAB - MATHS" },
+                            "Wednesday": { subject: "Lib/Yoga/PET", teacher: "PARANDHAMAIAH SIR", note: "PAL LAB - MATHS" },
+                            "Thursday": { subject: "Lib/Yoga/PET", teacher: "PARANDHAMAIAH SIR", note: "" },
+                            "Friday": { subject: "Lib/Yoga/PET", teacher: "PARANDHAMAIAH SIR", note: "" },
+                            "Saturday": { subject: "Lib/Yoga/PET", teacher: "PARANDHAMAIAH SIR", note: "" }
+                        }
+                    }
+                },
+                "7": {
+                    className: "7th Class",
+                    classTeacher: "BHAVANA MADAM",
+                    periods: {
+                        "1": {
+                            "Monday": { subject: "SCI", teacher: "BHAVANA MADAM", note: "" },
+                            "Tuesday": { subject: "SCI", teacher: "BHAVANA MADAM", note: "" },
+                            "Wednesday": { subject: "SCI", teacher: "BHAVANA MADAM", note: "" },
+                            "Thursday": { subject: "SCI", teacher: "BHAVANA MADAM", note: "" },
+                            "Friday": { subject: "SCI", teacher: "BHAVANA MADAM", note: "" },
+                            "Saturday": { subject: "SCI", teacher: "BHAVANA MADAM", note: "" }
+                        },
+                        "2": {
+                            "Monday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Tuesday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Wednesday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Thursday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Friday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Saturday": { subject: "Cultural Activities", teacher: "MADAVI MADAM", note: "" }
+                        },
+                        "3": {
+                            "Monday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "MON-PAL LAB" },
+                            "Tuesday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Wednesday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Thursday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Friday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Saturday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" }
+                        },
+                        "4": {
+                            "Monday": { subject: "TEL", teacher: "SURESH SIR", note: "" },
+                            "Tuesday": { subject: "TEL", teacher: "SURESH SIR", note: "" },
+                            "Wednesday": { subject: "TEL", teacher: "SURESH SIR", note: "WEDNESDAY-PAL LAB" },
+                            "Thursday": { subject: "TEL", teacher: "SURESH SIR", note: "" },
+                            "Friday": { subject: "TEL", teacher: "SURESH SIR", note: "" },
+                            "Saturday": { subject: "TEL", teacher: "SURESH SIR", note: "" }
+                        },
+                        "5": {
+                            "Monday": { subject: "MATH", teacher: "BAJI SIR", note: "" },
+                            "Tuesday": { subject: "MATH", teacher: "BAJI SIR", note: "TUESDAY-PAL LAB" },
+                            "Wednesday": { subject: "MATH", teacher: "BAJI SIR", note: "" },
+                            "Thursday": { subject: "MATH", teacher: "BAJI SIR", note: "" },
+                            "Friday": { subject: "MATH", teacher: "BAJI SIR", note: "" },
+                            "Saturday": { subject: "MATH", teacher: "BAJI SIR", note: "" }
+                        },
+                        "6": {
+                            "Monday": { subject: "SOC", teacher: "BRAMHAMANANDAM SIR", note: "" },
+                            "Tuesday": { subject: "SOC", teacher: "BRAMHAMANANDAM SIR", note: "" },
+                            "Wednesday": { subject: "SOC", teacher: "BRAMHAMANANDAM SIR", note: "" },
+                            "Thursday": { subject: "SOC", teacher: "BRAMHAMANANDAM SIR", note: "" },
+                            "Friday": { subject: "SOC", teacher: "BRAMHAMANANDAM SIR", note: "" },
+                            "Saturday": { subject: "SOC", teacher: "BRAMHAMANANDAM SIR", note: "" }
+                        },
+                        "7": {
+                            "Monday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Tuesday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Wednesday": { subject: "PAL LAB", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Thursday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Friday": { subject: "TEL", teacher: "SURESH SIR", note: "" },
+                            "Saturday": { subject: "MATH", teacher: "BAJI SIR", note: "" }
+                        },
+                        "8": {
+                            "Monday": { subject: "MATH", teacher: "BAJI SIR", note: "" },
+                            "Tuesday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Wednesday": { subject: "Lib/Yoga/PET", teacher: "BAJI SIR", note: "" },
+                            "Thursday": { subject: "Lib/Yoga/PET", teacher: "BAJI SIR", note: "" },
+                            "Friday": { subject: "Lib/Yoga/PET", teacher: "BAJI SIR", note: "" },
+                            "Saturday": { subject: "Lib/Yoga/PET", teacher: "BAJI SIR", note: "" }
+                        }
+                    }
+                },
+                "8": {
+                    className: "8th Class",
+                    classTeacher: "BRAHMANANDAM SIR",
+                    periods: {
+                        "1": {
+                            "Monday": { subject: "SOC", teacher: "BRAMHANANDAM SIR", note: "" },
+                            "Tuesday": { subject: "SOC", teacher: "BRAMHANANDAM SIR", note: "" },
+                            "Wednesday": { subject: "SOC", teacher: "BRAMHANANDAM SIR", note: "" },
+                            "Thursday": { subject: "SOC", teacher: "BRAMHANANDAM SIR", note: "" },
+                            "Friday": { subject: "SOC", teacher: "BRAMHANANDAM SIR", note: "" },
+                            "Saturday": { subject: "SOC", teacher: "BRAMHANANDAM SIR", note: "" }
+                        },
+                        "2": {
+                            "Monday": { subject: "TEL", teacher: "PARANDAMAIAH SIR", note: "" },
+                            "Tuesday": { subject: "TEL", teacher: "PARANDAMAIAH SIR", note: "" },
+                            "Wednesday": { subject: "TEL", teacher: "PARANDAMAIAH SIR", note: "" },
+                            "Thursday": { subject: "TEL", teacher: "PARANDAMAIAH SIR", note: "THURSDAY PAL LAB" },
+                            "Friday": { subject: "TEL", teacher: "PARANDAMAIAH SIR", note: "" },
+                            "Saturday": { subject: "TEL", teacher: "PARANDAMAIAH SIR", note: "" }
+                        },
+                        "3": {
+                            "Monday": { subject: "MATH", teacher: "BAJI SIR", note: "" },
+                            "Tuesday": { subject: "MATH", teacher: "BAJI SIR", note: "TUESDAY-PAL LAB" },
+                            "Wednesday": { subject: "MATH", teacher: "BAJI SIR", note: "" },
+                            "Thursday": { subject: "MATH", teacher: "BAJI SIR", note: "" },
+                            "Friday": { subject: "MATH", teacher: "BAJI SIR", note: "" },
+                            "Saturday": { subject: "MATH", teacher: "BAJI SIR", note: "" }
+                        },
+                        "4": {
+                            "Monday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Tuesday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Wednesday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Thursday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Friday": { subject: "LIBRARY", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Saturday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" }
+                        },
+                        "5": {
+                            "Monday": { subject: "SCI", teacher: "BHAVANA MADAM", note: "" },
+                            "Tuesday": { subject: "SCI", teacher: "BHAVANA MADAM", note: "" },
+                            "Wednesday": { subject: "SCI", teacher: "BHAVANA MADAM", note: "" },
+                            "Thursday": { subject: "SCI", teacher: "BHAVANA MADAM", note: "" },
+                            "Friday": { subject: "SCI", teacher: "BHAVANA MADAM", note: "" },
+                            "Saturday": { subject: "SCI", teacher: "BHAVANA MADAM", note: "" }
+                        },
+                        "6": {
+                            "Monday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Tuesday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Wednesday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Thursday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Friday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "FRIDAY-PAL LAB" },
+                            "Saturday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" }
+                        },
+                        "7": {
+                            "Monday": { subject: "TEL", teacher: "PARANDHAMAIAH SIR", note: "" },
+                            "Tuesday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Wednesday": { subject: "MATH", teacher: "BAJI SIR", note: "" },
+                            "Thursday": { subject: "Cultural Activities", teacher: "MADAVI MADAM", note: "" },
+                            "Friday": { subject: "Cultural Activities", teacher: "MADAVI MADAM", note: "" },
+                            "Saturday": { subject: "Cultural Activities", teacher: "MADAVI MADAM", note: "" }
+                        },
+                        "8": {
+                            "Monday": { subject: "MATH", teacher: "BAJI SIR", note: "" },
+                            "Tuesday": { subject: "MATH", teacher: "BAJI SIR", note: "" },
+                            "Wednesday": { subject: "MATH", teacher: "BAJI SIR", note: "" },
+                            "Thursday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Friday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Saturday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" }
+                        }
+                    }
+                },
+                "9": {
+                    className: "9th Class",
+                    classTeacher: "CHANDRAIAH SIR",
+                    periods: {
+                        "1": {
+                            "Monday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Tuesday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Wednesday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "WED-PAL LAB" },
+                            "Thursday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Friday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" },
+                            "Saturday": { subject: "ENG", teacher: "CHANDRAIAH SIR", note: "" }
+                        },
+                        "2": {
+                            "Monday": { subject: "NS", teacher: "BHAVANA MADAM", note: "" },
+                            "Tuesday": { subject: "NS", teacher: "BHAVANA MADAM", note: "" },
+                            "Wednesday": { subject: "NS", teacher: "BHAVANA MADAM", note: "" },
+                            "Thursday": { subject: "NS", teacher: "BHAVANA MADAM", note: "" },
+                            "Friday": { subject: "NS", teacher: "BHAVANA MADAM", note: "" },
+                            "Saturday": { subject: "NS", teacher: "BHAVANA MADAM", note: "" }
+                        },
+                        "3": {
+                            "Monday": { subject: "SOC", teacher: "SANDANI SIR", note: "" },
+                            "Tuesday": { subject: "SOC", teacher: "SANDANI SIR", note: "" },
+                            "Wednesday": { subject: "SOC", teacher: "SANDANI SIR", note: "" },
+                            "Thursday": { subject: "SOC", teacher: "SANDANI SIR", note: "" },
+                            "Friday": { subject: "SOC", teacher: "SANDANI SIR", note: "" },
+                            "Saturday": { subject: "SOC", teacher: "SANDANI SIR", note: "" }
+                        },
+                        "4": {
+                            "Monday": { subject: "MATH", teacher: "PARVATHI MADAM", note: "" },
+                            "Tuesday": { subject: "MATH", teacher: "PARVATHI MADAM", note: "" },
+                            "Wednesday": { subject: "MATH", teacher: "PARVATHI MADAM", note: "" },
+                            "Thursday": { subject: "MATH", teacher: "PARVATHI MADAM", note: "" },
+                            "Friday": { subject: "MATH", teacher: "PARVATHI MADAM", note: "" },
+                            "Saturday": { subject: "MATH", teacher: "PARVATHI MADAM", note: "" }
+                        },
+                        "5": {
+                            "Monday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Tuesday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Wednesday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Thursday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Friday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Saturday": { subject: "MATH", teacher: "PARVATHI MADAM", note: "SATURDAY-PAL LAB" }
+                        },
+                        "6": {
+                            "Monday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Tuesday": { subject: "PHY", teacher: "SRI HARI SIR", note: "" },
+                            "Wednesday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Thursday": { subject: "PHY", teacher: "SRI HARI SIR", note: "" },
+                            "Friday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Saturday": { subject: "PHY", teacher: "SRI HARI SIR", note: "" }
+                        },
+                        "7": {
+                            "Monday": { subject: "TEL", teacher: "PARANDAMAIAH SIR", note: "" },
+                            "Tuesday": { subject: "TEL", teacher: "PARANDAMAIAH SIR", note: "" },
+                            "Wednesday": { subject: "TEL", teacher: "PARANDAMAIAH SIR", note: "" },
+                            "Thursday": { subject: "TEL", teacher: "PARANDAMAIAH SIR", note: "THURSDAY-PAL LAB" },
+                            "Friday": { subject: "TEL", teacher: "PARANDAMAIAH SIR", note: "" },
+                            "Saturday": { subject: "TEL", teacher: "PARANDAMAIAH SIR", note: "" }
+                        },
+                        "8": {
+                            "Monday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Tuesday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Wednesday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Thursday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Friday": { subject: "LIBRARY", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Saturday": { subject: "PET", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" }
+                        }
+                    }
+                },
+                "10": {
+                    className: "10th Class",
+                    classTeacher: "SANDHYA MADAM",
+                    periods: {
+                        "1": {
+                            "Monday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Tuesday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Wednesday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Thursday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Friday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Saturday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" }
+                        },
+                        "2": {
+                            "Monday": { subject: "NS", teacher: "SANTHI MADAM", note: "" },
+                            "Tuesday": { subject: "NS", teacher: "SANTHI MADAM", note: "" },
+                            "Wednesday": { subject: "NS", teacher: "SANTHI MADAM", note: "" },
+                            "Thursday": { subject: "NS", teacher: "SANTHI MADAM", note: "" },
+                            "Friday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Saturday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" }
+                        },
+                        "3": {
+                            "Monday": { subject: "MATH", teacher: "YERRAIAH SIR", note: "" },
+                            "Tuesday": { subject: "MATH", teacher: "YERRAIAH SIR", note: "" },
+                            "Wednesday": { subject: "MATH", teacher: "YERRAIAH SIR", note: "" },
+                            "Thursday": { subject: "MATH", teacher: "YERRAIAH SIR", note: "" },
+                            "Friday": { subject: "MATH", teacher: "YERRAIAH SIR", note: "" },
+                            "Saturday": { subject: "MATH", teacher: "YERRAIAH SIR", note: "" }
+                        },
+                        "4": {
+                            "Monday": { subject: "SOC", teacher: "FAREEDH SIR", note: "" },
+                            "Tuesday": { subject: "SOC", teacher: "FAREEDH SIR", note: "" },
+                            "Wednesday": { subject: "SOC", teacher: "FAREEDH SIR", note: "" },
+                            "Thursday": { subject: "SOC", teacher: "FAREEDH SIR", note: "" },
+                            "Friday": { subject: "SOC", teacher: "FAREEDH SIR", note: "" },
+                            "Saturday": { subject: "SOC", teacher: "FAREEDH SIR", note: "" }
+                        },
+                        "5": {
+                            "Monday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Tuesday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Wednesday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Thursday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Friday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" },
+                            "Saturday": { subject: "HIN", teacher: "MADAVI MADAM", note: "" }
+                        },
+                        "6": {
+                            "Monday": { subject: "PHY", teacher: "SRI HARI SIR", note: "" },
+                            "Tuesday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Wednesday": { subject: "PHY", teacher: "SRI HARI SIR", note: "" },
+                            "Thursday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Friday": { subject: "PHY", teacher: "SRI HARI SIR", note: "" },
+                            "Saturday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" }
+                        },
+                        "7": {
+                            "Monday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Tuesday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Wednesday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Thursday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Friday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Saturday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" }
+                        },
+                        "8": {
+                            "Monday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Tuesday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Wednesday": { subject: "SOC", teacher: "FAREEDH SIR", note: "" },
+                            "Thursday": { subject: "SOC", teacher: "FAREEDH SIR", note: "" },
+                            "Friday": { subject: "MATH", teacher: "YERRAIAH SIR", note: "" },
+                            "Saturday": { subject: "MATH/PET", teacher: "YERRAIAH SIR", note: "" }
+                        }
+                    }
+                },
+                "jr-mpc": {
+                    className: "Jr.MPC",
+                    classTeacher: "PARVATHI MADAM",
+                    periods: {
+                        "1": {
+                            "Monday": { subject: "MATH", teacher: "PARVATHI MADAM", note: "" },
+                            "Tuesday": { subject: "MATH", teacher: "PARVATHI MADAM", note: "" },
+                            "Wednesday": { subject: "MATH", teacher: "PARVATHI MADAM", note: "" },
+                            "Thursday": { subject: "MATH", teacher: "PARVATHI MADAM", note: "" },
+                            "Friday": { subject: "MATH", teacher: "PARVATHI MADAM", note: "" },
+                            "Saturday": { subject: "MATH", teacher: "PARVATHI MADAM", note: "" }
+                        },
+                        "2": {
+                            "Monday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Tuesday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Wednesday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Thursday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Friday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Saturday": { subject: "GAMES", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" }
+                        },
+                        "3": {
+                            "Monday": { subject: "PS", teacher: "SRI HARI SIR", note: "" },
+                            "Tuesday": { subject: "PS", teacher: "SRI HARI SIR", note: "" },
+                            "Wednesday": { subject: "PS", teacher: "SRI HARI SIR", note: "" },
+                            "Thursday": { subject: "PS", teacher: "SRI HARI SIR", note: "" },
+                            "Friday": { subject: "PS", teacher: "SRI HARI SIR", note: "" },
+                            "Saturday": { subject: "PS", teacher: "SRI HARI SIR", note: "" }
+                        },
+                        "4": {
+                            "Monday": { subject: "MATH", teacher: "YERRAIAH SIR", note: "" },
+                            "Tuesday": { subject: "MATH", teacher: "YERRAIAH SIR", note: "" },
+                            "Wednesday": { subject: "MATH", teacher: "YERRAIAH SIR", note: "" },
+                            "Thursday": { subject: "MATH", teacher: "YERRAIAH SIR", note: "" },
+                            "Friday": { subject: "MATH", teacher: "YERRAIAH SIR", note: "" },
+                            "Saturday": { subject: "MATH", teacher: "YERRAIAH SIR", note: "" }
+                        },
+                        "5": {
+                            "Monday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Tuesday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Wednesday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Thursday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Friday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Saturday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" }
+                        },
+                        "6": {
+                            "Monday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Tuesday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Wednesday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Thursday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Friday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Saturday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" }
+                        },
+                        "7": {
+                            "Monday": { subject: "MATHS-1A", teacher: "PARVATHI MADAM", note: "" },
+                            "Tuesday": { subject: "MATHS-1B", teacher: "PARVATHI MADAM", note: "" },
+                            "Wednesday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Thursday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Friday": { subject: "PHYSICS", teacher: "SRI HARI SIR", note: "" },
+                            "Saturday": { subject: "CHEMISTRY", teacher: "SRILAKSHMI MADAM", note: "" }
+                        },
+                        "8": {
+                            "Monday": { subject: "MATHS-1A", teacher: "PARVATHI MADAM", note: "" },
+                            "Tuesday": { subject: "MATHS-1B", teacher: "PARVATHI MADAM", note: "" },
+                            "Wednesday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Thursday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Friday": { subject: "PHYSICS", teacher: "SRI HARI SIR", note: "" },
+                            "Saturday": { subject: "CHEMISTRY", teacher: "SRILAKSHMI MADAM", note: "" }
+                        }
+                    }
+                },
+                "jr-bipc": {
+                    className: "Jr.Bi.PC",
+                    classTeacher: "SRI LAKSHMI MADAM",
+                    periods: {
+                        "1": {
+                            "Monday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Tuesday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Wednesday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Thursday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Friday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Saturday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" }
+                        },
+                        "2": {
+                            "Monday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Tuesday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Wednesday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Thursday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Friday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Saturday": { subject: "GAMES", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" }
+                        },
+                        "3": {
+                            "Monday": { subject: "PS", teacher: "SRI HARI SIR", note: "" },
+                            "Tuesday": { subject: "PS", teacher: "SRI HARI SIR", note: "" },
+                            "Wednesday": { subject: "PS", teacher: "SRI HARI SIR", note: "" },
+                            "Thursday": { subject: "PS", teacher: "SRI HARI SIR", note: "" },
+                            "Friday": { subject: "PS", teacher: "SRI HARI SIR", note: "" },
+                            "Saturday": { subject: "PS", teacher: "SRI HARI SIR", note: "" }
+                        },
+                        "4": {
+                            "Monday": { subject: "BOT", teacher: "SANTHI MADAM", note: "" },
+                            "Tuesday": { subject: "BOT", teacher: "SANTHI MADAM", note: "" },
+                            "Wednesday": { subject: "BOT", teacher: "SANTHI MADAM", note: "" },
+                            "Thursday": { subject: "BOT", teacher: "SANTHI MADAM", note: "" },
+                            "Friday": { subject: "BOT", teacher: "SANTHI MADAM", note: "" },
+                            "Saturday": { subject: "BOT", teacher: "SANTHI MADAM", note: "" }
+                        },
+                        "5": {
+                            "Monday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Tuesday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Wednesday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Thursday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Friday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Saturday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" }
+                        },
+                        "6": {
+                            "Monday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Tuesday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Wednesday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Thursday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Friday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Saturday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" }
+                        },
+                        "7": {
+                            "Monday": { subject: "BOTANY", teacher: "SANTHI MADAM", note: "" },
+                            "Tuesday": { subject: "ZOOLOGY", teacher: "SANTHI MADAM", note: "" },
+                            "Wednesday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Thursday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Friday": { subject: "PHYSICS", teacher: "SRI HARI SIR", note: "" },
+                            "Saturday": { subject: "CHEMISTRY", teacher: "SRILAKSHMI MADAM", note: "" }
+                        },
+                        "8": {
+                            "Monday": { subject: "BOTANY", teacher: "SANTHI MADAM", note: "" },
+                            "Tuesday": { subject: "ZOOLOGY", teacher: "SANTHI MADAM", note: "" },
+                            "Wednesday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Thursday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Friday": { subject: "PHYSICS", teacher: "SRI HARI SIR", note: "" },
+                            "Saturday": { subject: "CHEMISTRY", teacher: "SRILAKSHMI MADAM", note: "" }
+                        }
+                    }
+                },
+                "jr-cec": {
+                    className: "Jr.CEC",
+                    classTeacher: "DORASANAIAH SIR",
+                    periods: {
+                        "1": {
+                            "Monday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" },
+                            "Tuesday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" },
+                            "Wednesday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" },
+                            "Thursday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" },
+                            "Friday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" },
+                            "Saturday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" }
+                        },
+                        "2": {
+                            "Monday": { subject: "CIV", teacher: "FAREEDH SIR", note: "" },
+                            "Tuesday": { subject: "CIV", teacher: "FAREEDH SIR", note: "" },
+                            "Wednesday": { subject: "CIV", teacher: "FAREEDH SIR", note: "" },
+                            "Thursday": { subject: "CIV", teacher: "FAREEDH SIR", note: "" },
+                            "Friday": { subject: "CIV", teacher: "FAREEDH SIR", note: "" },
+                            "Saturday": { subject: "CIV", teacher: "FAREEDH SIR", note: "" }
+                        },
+                        "3": {
+                            "Monday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" },
+                            "Tuesday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" },
+                            "Wednesday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" },
+                            "Thursday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" },
+                            "Friday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" },
+                            "Saturday": { subject: "GAMES", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" }
+                        },
+                        "4": {
+                            "Monday": { subject: "ECO", teacher: "SANDANI SIR", note: "" },
+                            "Tuesday": { subject: "ECO", teacher: "SANDANI SIR", note: "" },
+                            "Wednesday": { subject: "ECO", teacher: "SANDANI SIR", note: "" },
+                            "Thursday": { subject: "ECO", teacher: "SANDANI SIR", note: "" },
+                            "Friday": { subject: "ECO", teacher: "SANDANI SIR", note: "" },
+                            "Saturday": { subject: "ECO", teacher: "SANDANI SIR", note: "" }
+                        },
+                        "5": {
+                            "Monday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Tuesday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Wednesday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Thursday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Friday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Saturday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" }
+                        },
+                        "6": {
+                            "Monday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Tuesday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Wednesday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Thursday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Friday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Saturday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" }
+                        },
+                        "7": {
+                            "Monday": { subject: "CIVICS", teacher: "FAREEDH SIR", note: "" },
+                            "Tuesday": { subject: "COMMERCE", teacher: "DORASANAIAH SIR", note: "" },
+                            "Wednesday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Thursday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Friday": { subject: "ECONOMICS", teacher: "SANDANI SIR", note: "" },
+                            "Saturday": { subject: "ENGLISH", teacher: "SANDHYA MADAM", note: "" }
+                        },
+                        "8": {
+                            "Monday": { subject: "CIVICS", teacher: "FAREEDH SIR", note: "" },
+                            "Tuesday": { subject: "COMMERCE", teacher: "DORASANAIAH SIR", note: "" },
+                            "Wednesday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Thursday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Friday": { subject: "ECONOMICS", teacher: "SANDANI SIR", note: "" },
+                            "Saturday": { subject: "ENGLISH", teacher: "SANDHYA MADAM", note: "" }
+                        }
+                    }
+                },
+                "sr-mpc": {
+                    className: "Sr.MPC",
+                    classTeacher: "YERRAIAH SIR",
+                    periods: {
+                        "1": {
+                            "Monday": { subject: "MATH", teacher: "YERRAIAH SIR", note: "" },
+                            "Tuesday": { subject: "MATH", teacher: "YERRAIAH SIR", note: "" },
+                            "Wednesday": { subject: "MATH", teacher: "YERRAIAH SIR", note: "" },
+                            "Thursday": { subject: "MATH", teacher: "YERRAIAH SIR", note: "" },
+                            "Friday": { subject: "MATH", teacher: "YERRAIAH SIR", note: "" },
+                            "Saturday": { subject: "MATH", teacher: "YERRAIAH SIR", note: "" }
+                        },
+                        "2": {
+                            "Monday": { subject: "PS", teacher: "SRI HARI SIR", note: "" },
+                            "Tuesday": { subject: "PS", teacher: "SRI HARI SIR", note: "" },
+                            "Wednesday": { subject: "PS", teacher: "SRI HARI SIR", note: "" },
+                            "Thursday": { subject: "PS", teacher: "SRI HARI SIR", note: "" },
+                            "Friday": { subject: "PS", teacher: "SRI HARI SIR", note: "" },
+                            "Saturday": { subject: "PS", teacher: "SRI HARI SIR", note: "" }
+                        },
+                        "3": {
+                            "Monday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Tuesday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Wednesday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Thursday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Friday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Saturday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" }
+                        },
+                        "4": {
+                            "Monday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Tuesday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Wednesday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Thursday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Friday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Saturday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" }
+                        },
+                        "5": {
+                            "Monday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Tuesday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Wednesday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Thursday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Friday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Saturday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" }
+                        },
+                        "6": {
+                            "Monday": { subject: "MATH", teacher: "PARVATHI MADAM", note: "" },
+                            "Tuesday": { subject: "MATH", teacher: "PARVATHI MADAM", note: "" },
+                            "Wednesday": { subject: "MATH", teacher: "PARVATHI MADAM", note: "" },
+                            "Thursday": { subject: "MATH", teacher: "PARVATHI MADAM", note: "" },
+                            "Friday": { subject: "MATH", teacher: "PARVATHI MADAM", note: "" },
+                            "Saturday": { subject: "MATH", teacher: "PARVATHI MADAM", note: "" }
+                        },
+                        "7": {
+                            "Monday": { subject: "PHYSICS", teacher: "SRI HARI SIR", note: "" },
+                            "Tuesday": { subject: "CHEMISTRY", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Wednesday": { subject: "MATHS-1A", teacher: "YERRAIAH SIR", note: "" },
+                            "Thursday": { subject: "MATHS-1B", teacher: "YERRAIAH SIR", note: "" },
+                            "Friday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Saturday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" }
+                        },
+                        "8": {
+                            "Monday": { subject: "PHYSICS", teacher: "SRI HARI SIR", note: "" },
+                            "Tuesday": { subject: "CHEMISTRY", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Wednesday": { subject: "MATHS-1A", teacher: "YERRAIAH SIR", note: "" },
+                            "Thursday": { subject: "MATHS-1B", teacher: "YERRAIAH SIR", note: "" },
+                            "Friday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Saturday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" }
+                        }
+                    }
+                },
+                "sr-bipc": {
+                    className: "Sr.Bi.PC",
+                    classTeacher: "SANTHI MADAM",
+                    periods: {
+                        "1": {
+                            "Monday": { subject: "BOT", teacher: "SANTHI MADAM", note: "" },
+                            "Tuesday": { subject: "BOT", teacher: "SANTHI MADAM", note: "" },
+                            "Wednesday": { subject: "BOT", teacher: "SANTHI MADAM", note: "" },
+                            "Thursday": { subject: "BOT", teacher: "SANTHI MADAM", note: "" },
+                            "Friday": { subject: "BOT", teacher: "SANTHI MADAM", note: "" },
+                            "Saturday": { subject: "BOT", teacher: "SANTHI MADAM", note: "" }
+                        },
+                        "2": {
+                            "Monday": { subject: "PS", teacher: "SRI HARI SIR", note: "" },
+                            "Tuesday": { subject: "PS", teacher: "SRI HARI SIR", note: "" },
+                            "Wednesday": { subject: "PS", teacher: "SRI HARI SIR", note: "" },
+                            "Thursday": { subject: "PS", teacher: "SRI HARI SIR", note: "" },
+                            "Friday": { subject: "PS", teacher: "SRI HARI SIR", note: "" },
+                            "Saturday": { subject: "PS", teacher: "SRI HARI SIR", note: "" }
+                        },
+                        "3": {
+                            "Monday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Tuesday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Wednesday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Thursday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Friday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Saturday": { subject: "CHEM", teacher: "SRILAKSHMI MADAM", note: "" }
+                        },
+                        "4": {
+                            "Monday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Tuesday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Wednesday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Thursday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Friday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Saturday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" }
+                        },
+                        "5": {
+                            "Monday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Tuesday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Wednesday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Thursday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Friday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Saturday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" }
+                        },
+                        "6": {
+                            "Monday": { subject: "ZOO", teacher: "SANTHI MADAM", note: "" },
+                            "Tuesday": { subject: "ZOO", teacher: "SANTHI MADAM", note: "" },
+                            "Wednesday": { subject: "ZOO", teacher: "SANTHI MADAM", note: "" },
+                            "Thursday": { subject: "ZOO", teacher: "SANTHI MADAM", note: "" },
+                            "Friday": { subject: "ZOO", teacher: "SANTHI MADAM", note: "" },
+                            "Saturday": { subject: "ZOO", teacher: "SANTHI MADAM", note: "" }
+                        },
+                        "7": {
+                            "Monday": { subject: "PHYSICS", teacher: "SRI HARI SIR", note: "" },
+                            "Tuesday": { subject: "CHEMISTRY", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Wednesday": { subject: "ZOOLOGY", teacher: "SANTHI MADAM", note: "" },
+                            "Thursday": { subject: "BOTANY", teacher: "SANTHI MADAM", note: "" },
+                            "Friday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Saturday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" }
+                        },
+                        "8": {
+                            "Monday": { subject: "PHYSICS", teacher: "SRI HARI SIR", note: "" },
+                            "Tuesday": { subject: "CHEMISTRY", teacher: "SRILAKSHMI MADAM", note: "" },
+                            "Wednesday": { subject: "ZOOLOGY", teacher: "SANTHI MADAM", note: "" },
+                            "Thursday": { subject: "BOTANY", teacher: "SANTHI MADAM", note: "" },
+                            "Friday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Saturday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" }
+                        }
+                    }
+                },
+                "sr-cec": {
+                    className: "Sr.CEC",
+                    classTeacher: "SANDHANI SIR",
+                    periods: {
+                        "1": {
+                            "Monday": { subject: "ECO", teacher: "SANDANI SIR", note: "" },
+                            "Tuesday": { subject: "ECO", teacher: "SANDANI SIR", note: "" },
+                            "Wednesday": { subject: "ECO", teacher: "SANDANI SIR", note: "" },
+                            "Thursday": { subject: "ECO", teacher: "SANDANI SIR", note: "" },
+                            "Friday": { subject: "ECO", teacher: "SANDANI SIR", note: "" },
+                            "Saturday": { subject: "ECO", teacher: "SANDANI SIR", note: "" }
+                        },
+                        "2": {
+                            "Monday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Tuesday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Wednesday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Thursday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Friday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" },
+                            "Saturday": { subject: "ENG", teacher: "SANDHYA MADAM", note: "" }
+                        },
+                        "3": {
+                            "Monday": { subject: "CIV", teacher: "FAREEDH SIR", note: "" },
+                            "Tuesday": { subject: "CIV", teacher: "FAREEDH SIR", note: "" },
+                            "Wednesday": { subject: "CIV", teacher: "FAREEDH SIR", note: "" },
+                            "Thursday": { subject: "CIV", teacher: "FAREEDH SIR", note: "" },
+                            "Friday": { subject: "CIV", teacher: "FAREEDH SIR", note: "" },
+                            "Saturday": { subject: "CIV", teacher: "FAREEDH SIR", note: "" }
+                        },
+                        "4": {
+                            "Monday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Tuesday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Wednesday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Thursday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Friday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" },
+                            "Saturday": { subject: "TEL", teacher: "LAVANYA MADAM", note: "" }
+                        },
+                        "5": {
+                            "Monday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" },
+                            "Tuesday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" },
+                            "Wednesday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" },
+                            "Thursday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" },
+                            "Friday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" },
+                            "Saturday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" }
+                        },
+                        "6": {
+                            "Monday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" },
+                            "Tuesday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" },
+                            "Wednesday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" },
+                            "Thursday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" },
+                            "Friday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" },
+                            "Saturday": { subject: "COMM", teacher: "DORASANAIAH SIR", note: "" }
+                        },
+                        "7": {
+                            "Monday": { subject: "ECONOMICS", teacher: "SANDANI SIR", note: "" },
+                            "Tuesday": { subject: "CIVICS", teacher: "FAREEDH SIR", note: "" },
+                            "Wednesday": { subject: "COMMERCE", teacher: "DORASANAIAH SIR", note: "" },
+                            "Thursday": { subject: "ENGLISH", teacher: "SANDHYA MADAM", note: "" },
+                            "Friday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Saturday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" }
+                        },
+                        "8": {
+                            "Monday": { subject: "ECONOMICS", teacher: "SANDANI SIR", note: "" },
+                            "Tuesday": { subject: "CIVICS", teacher: "FAREEDH SIR", note: "" },
+                            "Wednesday": { subject: "COMMERCE", teacher: "DORASANAIAH SIR", note: "" },
+                            "Thursday": { subject: "ENGLISH", teacher: "SANDHYA MADAM", note: "" },
+                            "Friday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" },
+                            "Saturday": { subject: "VOCATIONAL", teacher: "K.SAI NATH SIR(IT)/P.LAKSHMI MADAM(APPERAL)", note: "" }
+                        }
+                    }
+                }
+            };
+            
+            // Function to generate results HTML
+            function generateResults(classId, periodId) {
+                if (!classId || !periodId || !timetableData[classId] || !timetableData[classId].periods[periodId]) {
+                    return '<div class="no-results"><h3>Please select a class and period</h3><p>The teacher information will appear here once you make your selections.</p></div>';
+                }
+                
+                const classInfo = timetableData[classId];
+                const periodData = classInfo.periods[periodId];
+                const periodTimes = {
+                    "1": "09:15 AM to 10:10 AM",
+                    "2": "10:00 AM to 10:40 AM",
+                    "3": "10:55 AM to 11:35 AM",
+                    "4": "11:35 AM to 12:15 PM",
+                    "5": "01:05 PM to 01:50 PM",
+                    "6": "01:50 PM to 02:30 PM",
+                    "7": "02:40 PM to 03:20 PM",
+                    "8": "03:20 PM to 04:00 PM"
+                };
+                
+                let html = `<div class="results-header">
+                    <h2>${classInfo.className} - ${periodId}${getOrdinalSuffix(periodId)} Period</h2>
+                    <p class="period-time">Time: ${periodTimes[periodId]}</p>
+                    <p class="teacher-details"><strong>Class Teacher:</strong> ${classInfo.classTeacher}</p>
+                </div>`;
+                
+                html += `<div class="teacher-list">`;
+                
+                const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                let teachersFound = false;
+                
+                days.forEach(day => {
+                    if (periodData[day]) {
+                        teachersFound = true;
+                        const teacherInfo = periodData[day];
+                        html += `
+                        <div class="teacher-card">
+                            <div class="teacher-name">${teacherInfo.teacher}</div>
+                            <div class="teacher-subject">${teacherInfo.subject}</div>
+                            <div class="teacher-details"><strong>Day:</strong> ${day}</div>
+                            ${teacherInfo.note ? `<div class="teacher-details"><strong>Note:</strong> ${teacherInfo.note}</div>` : ''}
+                        </div>`;
+                    }
+                });
+                
+                if (!teachersFound) {
+                    html += `<div class="no-results">
+                        <h3>No teachers found</h3>
+                        <p>There are no teachers scheduled for this class during the selected period.</p>
+                    </div>`;
+                }
+                
+                html += `</div>`;
+                return html;
+            }
+            
+            // Helper function to get ordinal suffix
+            function getOrdinalSuffix(i) {
+                const j = i % 10, k = i % 100;
+                if (j === 1 && k !== 11) return "st";
+                if (j === 2 && k !== 12) return "nd";
+                if (j === 3 && k !== 13) return "rd";
+                return "th";
+            }
+            
+            // Event listeners for selections
+            classSelect.addEventListener('change', updateResults);
+            periodSelect.addEventListener('change', updateResults);
+            
+            function updateResults() {
+                const selectedClass = classSelect.value;
+                const selectedPeriod = periodSelect.value;
+                resultsContent.innerHTML = generateResults(selectedClass, selectedPeriod);
+            }
+        });
+    </script>
+</body>
+</html>
